@@ -1,0 +1,39 @@
+﻿  ComputacaoGrafica.cpp
+C:\Users\rodri\source\repos\ComputacaoGrafica\ComputacaoGrafica\ComputacaoGrafica.cpp(114,21): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\rodri\source\repos\ComputacaoGrafica\ComputacaoGrafica\ComputacaoGrafica.cpp(116,16): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\rodri\source\repos\ComputacaoGrafica\ComputacaoGrafica\ComputacaoGrafica.cpp(171,13): warning C4244: 'inicializando': conversão de '_Ty1' para 'float', possível perda de dados
+          with
+          [
+              _Ty1=int
+          ]
+C:\Users\rodri\source\repos\ComputacaoGrafica\ComputacaoGrafica\ComputacaoGrafica.cpp(172,13): warning C4244: 'inicializando': conversão de '_Ty2' para 'float', possível perda de dados
+          with
+          [
+              _Ty2=int
+          ]
+C:\Users\rodri\source\repos\ComputacaoGrafica\ComputacaoGrafica\ComputacaoGrafica.cpp(173,32): warning C4244: 'argumento': conversão de 'float' para 'const unsigned __int64', possível perda de dados
+C:\Users\rodri\source\repos\ComputacaoGrafica\ComputacaoGrafica\ComputacaoGrafica.cpp(173,62): warning C4244: 'argumento': conversão de 'float' para 'const unsigned __int64', possível perda de dados
+C:\Users\rodri\source\repos\ComputacaoGrafica\ComputacaoGrafica\ComputacaoGrafica.cpp(173,66): warning C4244: 'argumento': conversão de '_Ty2' para 'GLfloat', possível perda de dados
+          with
+          [
+              _Ty2=double
+          ]
+C:\Users\rodri\source\repos\ComputacaoGrafica\ComputacaoGrafica\ComputacaoGrafica.cpp(173,36): warning C4244: 'argumento': conversão de '_Ty1' para 'GLfloat', possível perda de dados
+          with
+          [
+              _Ty1=double
+          ]
+C:\Users\rodri\source\repos\ComputacaoGrafica\ComputacaoGrafica\ComputacaoGrafica.cpp(174,32): warning C4244: 'argumento': conversão de 'float' para 'const unsigned __int64', possível perda de dados
+C:\Users\rodri\source\repos\ComputacaoGrafica\ComputacaoGrafica\ComputacaoGrafica.cpp(174,62): warning C4244: 'argumento': conversão de 'float' para 'const unsigned __int64', possível perda de dados
+C:\Users\rodri\source\repos\ComputacaoGrafica\ComputacaoGrafica\ComputacaoGrafica.cpp(174,66): warning C4244: 'argumento': conversão de '_Ty2' para 'GLfloat', possível perda de dados
+          with
+          [
+              _Ty2=double
+          ]
+C:\Users\rodri\source\repos\ComputacaoGrafica\ComputacaoGrafica\ComputacaoGrafica.cpp(174,36): warning C4244: 'argumento': conversão de '_Ty1' para 'GLfloat', possível perda de dados
+          with
+          [
+              _Ty1=double
+          ]
+  ComputacaoGrafica.vcxproj -> C:\Users\rodri\source\repos\ComputacaoGrafica\x64\Debug\ComputacaoGrafica.exe
+          1 arquivo(s) copiado(s).
