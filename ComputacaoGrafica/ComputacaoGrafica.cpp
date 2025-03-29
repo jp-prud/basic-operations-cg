@@ -22,10 +22,7 @@ struct Cubo {
 };
 
 Cubo criar_cubo(double x, double y, double z, double tamanho);
-void desenhar(Cubo cubo);
-void movimentar(Cubo& cubo, double dx, double dy, double dz);
-void escalar(Cubo& cubo, double sx, double sy, double sz);
-void rotacionar(Cubo& cubo, double anguloX, double anguloY);
+void desenhar(const Cubo& cubo);
 void display();
 void keyboard(unsigned char key, int x, int y);
 void keyboard_special(int key, int x, int y);
@@ -57,6 +54,26 @@ int main(int argc, char** argv) {
     return 0;
 }
 
+Cubo criar_cubo(double x, double y, double z, double tamanho) {
+    Cubo novo_cubo;
+    novo_cubo.posicao = { x, y, z };
+    novo_cubo.escala = { 1, 1, 1 };
+    novo_cubo.rotacao = { 0, 0, 0 };
+
+    double t = tamanho / 2.0;
+    novo_cubo.vertices = {
+        {-t, -t, -t}, { t, -t, -t}, { t,  t, -t}, {-t,  t, -t},
+        {-t, -t,  t}, { t, -t,  t}, { t,  t,  t}, {-t,  t,  t}
+    };
+
+    novo_cubo.arestas = {
+        {0, 1}, {1, 2}, {2, 3}, {3, 0},
+        {4, 5}, {5, 6}, {6, 7}, {7, 4},
+        {0, 4}, {1, 5}, {2, 6}, {3, 7}
+    };
+    return novo_cubo;
+}
+
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
     desenhar(cubo);
@@ -68,27 +85,7 @@ void redraw(int value) {
     glutTimerFunc(delay, redraw, 0);
 }
 
-Cubo criar_cubo(double x, double y, double z, double tamanho) {
-    Cubo novo_cubo;
-    novo_cubo.posicao = { x, y, z };
-    novo_cubo.escala = { 1, 1, 1 };
-    novo_cubo.rotacao = { 0, 0, 0 };
-    
-    double t = tamanho / 2.0;
-    novo_cubo.vertices = {
-        {-t, -t, -t}, { t, -t, -t}, { t,  t, -t}, {-t,  t, -t},
-        {-t, -t,  t}, { t, -t,  t}, { t,  t,  t}, {-t,  t,  t}
-    };
-    
-    novo_cubo.arestas = {
-        {0, 1}, {1, 2}, {2, 3}, {3, 0},
-        {4, 5}, {5, 6}, {6, 7}, {7, 4},
-        {0, 4}, {1, 5}, {2, 6}, {3, 7}
-    };
-    return novo_cubo;
-}
-
-void desenhar(Cubo cubo) {
+void desenhar(const Cubo& cubo) {
     glColor3f(0.0, 0.0, 0.0);
     glBegin(GL_LINES);
     for (const Aresta& Aresta : cubo.arestas) {
@@ -123,36 +120,44 @@ void escalar(Cubo& cubo, double sx, double sy, double sz) {
     }
 }
 
+void rotacionar(Vertice& posicao, double anguloX, double anguloY, double anguloZ)
+{
+    double x = std::get<0>(posicao);
+    double y = std::get<1>(posicao);
+    double z = std::get<2>(posicao);
+
+    // Rotação em X
+    double novoY = y * cos(anguloX) - z * sin(anguloX);
+    double novoZ = y * sin(anguloX) + z * cos(anguloX);
+    y = novoY;
+    z = novoZ;
+
+    // Rotação em Y
+    double novoX = x * cos(anguloY) + z * sin(anguloY);
+    z = -x * sin(anguloY) + z * cos(anguloY);
+    x = novoX;
+
+    // Rotação em Z
+    double novoX2 = x * cos(anguloZ) - y * sin(anguloZ);
+    double novoY2 = x * sin(anguloZ) + y * cos(anguloZ);
+    x = novoX2;
+    y = novoY2;
+
+    // Atualiza as coordenadas
+    std::get<0>(posicao) = x;
+    std::get<1>(posicao) = y;
+    std::get<2>(posicao) = z;
+}
+
 void rotacionar(Cubo& cubo, double anguloX, double anguloY, double anguloZ) {
     const double radX = anguloX * std::numbers::pi / 180.0;
     const double radY = anguloY * std::numbers::pi / 180.0;
     const double radZ = anguloZ * std::numbers::pi / 180.0;
+
+    rotacionar(cubo.posicao, radX, radY, radZ);
+
     for (Vertice& v : cubo.vertices) {
-        double x = std::get<0>(v);
-        double y = std::get<1>(v);
-        double z = std::get<2>(v);
-
-        // Rotação em X
-        double novoY = y * cos(radX) - z * sin(radX);
-        double novoZ = y * sin(radX) + z * cos(radX);
-        y = novoY;
-        z = novoZ;
-
-        // Rotação em Y
-        double novoX = x * cos(radY) + z * sin(radY);
-        z = -x * sin(radY) + z * cos(radY);
-        x = novoX;
-
-        // Rotação em Z
-        double novoX2 = x * cos(radZ) - y * sin(radZ);
-        double novoY2 = x * sin(radZ) + y * cos(radZ);
-        x = novoX2;
-        y = novoY2;
-
-        // Atualiza as coordenadas
-        std::get<0>(v) = x;
-        std::get<1>(v) = y;
-        std::get<2>(v) = z;
+        rotacionar(v, radX, radY, radZ);
     }
 }
 
