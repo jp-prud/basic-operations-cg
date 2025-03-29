@@ -1,9 +1,0 @@
-﻿  ComputacaoGrafica.cpp
-C:\Users\7785321\Documents\GitHub\basic-operations-cg\ComputacaoGrafica\ComputacaoGrafica.cpp(100,28): warning C4244: 'argumento': conversão de 'double' para 'GLfloat', possível perda de dados
-C:\Users\7785321\Documents\GitHub\basic-operations-cg\ComputacaoGrafica\ComputacaoGrafica.cpp(100,24): warning C4244: 'argumento': conversão de 'double' para 'GLfloat', possível perda de dados
-C:\Users\7785321\Documents\GitHub\basic-operations-cg\ComputacaoGrafica\ComputacaoGrafica.cpp(100,20): warning C4244: 'argumento': conversão de 'double' para 'GLfloat', possível perda de dados
-C:\Users\7785321\Documents\GitHub\basic-operations-cg\ComputacaoGrafica\ComputacaoGrafica.cpp(101,28): warning C4244: 'argumento': conversão de 'double' para 'GLfloat', possível perda de dados
-C:\Users\7785321\Documents\GitHub\basic-operations-cg\ComputacaoGrafica\ComputacaoGrafica.cpp(101,24): warning C4244: 'argumento': conversão de 'double' para 'GLfloat', possível perda de dados
-C:\Users\7785321\Documents\GitHub\basic-operations-cg\ComputacaoGrafica\ComputacaoGrafica.cpp(101,20): warning C4244: 'argumento': conversão de 'double' para 'GLfloat', possível perda de dados
-  ComputacaoGrafica.vcxproj -> C:\Users\7785321\Documents\GitHub\basic-operations-cg\x64\Debug\ComputacaoGrafica.exe
-          1 arquivo(s) copiado(s).
