@@ -21,17 +21,23 @@ struct Cubo {
     ListaArestas arestas;
 };
 
+struct Mouse {
+  Posicao posicao = { -1, -1 };
+  int botao = -1;
+  float sense = .4;
+};
+
 Cubo criar_cubo(double x, double y, double z, double tamanho);
 void desenhar(const Cubo& cubo);
 void display();
 void keyboard(unsigned char key, int x, int y);
-void keyboard_special(int key, int x, int y);
 void mouse_move(int x, int y);
+void mouse_click(int button, int state, int x, int y);
 void redraw(int value);
 
 Cubo cubo;
 int delay = 10;
-Posicao posMouse = { -1, -1 };
+Mouse mouse;
 
 int main(int argc, char** argv) {
     glutInitWindowSize(512, 512);
@@ -46,8 +52,9 @@ int main(int argc, char** argv) {
     
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
-    glutSpecialFunc(keyboard_special);
-    glutPassiveMotionFunc(mouse_move);
+    glutMotionFunc(mouse_move);
+    glutMouseFunc(mouse_click);
+
     glutTimerFunc(delay, redraw, 0);
     
     glutMainLoop();
@@ -96,7 +103,6 @@ void desenhar(const Cubo& cubo) {
         std::tie(x2, y2, z2) = v2;
         glVertex3f(x1, y1, z1);
         glVertex3f(x2, y2, z2);
-        //std::cout << x1 << "\t" << y1 << "\t" << z1 << "\t--->\t" << x2 << "\t" << y2 << "\t" << z2 << std::endl;
     }
     glEnd();
 }
@@ -120,76 +126,81 @@ void escalar(Cubo& cubo, double sx, double sy, double sz) {
     }
 }
 
-void rotacionar(Vertice& posicao, double anguloX, double anguloY, double anguloZ)
-{
-    double x = std::get<0>(posicao);
-    double y = std::get<1>(posicao);
-    double z = std::get<2>(posicao);
-
-    // Rotação em X
-    double novoY = y * cos(anguloX) - z * sin(anguloX);
-    double novoZ = y * sin(anguloX) + z * cos(anguloX);
-    y = novoY;
-    z = novoZ;
-
-    // Rotação em Y
-    double novoX = x * cos(anguloY) + z * sin(anguloY);
-    z = -x * sin(anguloY) + z * cos(anguloY);
-    x = novoX;
-
-    // Rotação em Z
-    double novoX2 = x * cos(anguloZ) - y * sin(anguloZ);
-    double novoY2 = x * sin(anguloZ) + y * cos(anguloZ);
-    x = novoX2;
-    y = novoY2;
-
-    // Atualiza as coordenadas
-    std::get<0>(posicao) = x;
-    std::get<1>(posicao) = y;
-    std::get<2>(posicao) = z;
-}
-
 void rotacionar(Cubo& cubo, double anguloX, double anguloY, double anguloZ) {
     const double radX = anguloX * std::numbers::pi / 180.0;
     const double radY = anguloY * std::numbers::pi / 180.0;
     const double radZ = anguloZ * std::numbers::pi / 180.0;
 
-    rotacionar(cubo.posicao, radX, radY, radZ);
+    const double centerX = std::get<0>(cubo.posicao);
+    const double centerY = std::get<1>(cubo.posicao);
+    const double centerZ = std::get<2>(cubo.posicao);
 
-    for (Vertice& v : cubo.vertices) {
-        rotacionar(v, radX, radY, radZ);
+    for (Vertice& vertice : cubo.vertices) {
+      double x = std::get<0>(vertice) - centerX;
+      double y = std::get<1>(vertice) - centerY;
+      double z = std::get<2>(vertice) - centerZ;
+
+      // Rotação em X
+      double novoY = y * cos(anguloX) - z * sin(anguloX);
+      double novoZ = y * sin(anguloX) + z * cos(anguloX);
+      y = novoY;
+      z = novoZ;
+
+      // Rotação em Y
+      double novoX = x * cos(anguloY) + z * sin(anguloY);
+      z = -x * sin(anguloY) + z * cos(anguloY);
+      x = novoX;
+
+      // Rotação em Z
+      double novoX2 = x * cos(anguloZ) - y * sin(anguloZ);
+      double novoY2 = x * sin(anguloZ) + y * cos(anguloZ);
+      x = novoX2;
+      y = novoY2;
+
+      // Translação de volta (somando as coordenadas do centro)
+      x += centerX;
+      y += centerY;
+      z += centerZ;
+
+      // Atualiza as coordenadas
+      std::get<0>(vertice) = x;
+      std::get<1>(vertice) = y;
+      std::get<2>(vertice) = z;
     }
 }
 
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
+        case '+': escalar(cubo, 1.1, 1.1, 1.1); break;
+        case '-': escalar(cubo, 0.9, 0.9, 0.9); break;
+        case 'r': rotacionar(cubo, 0, 0, .1); break;
         case ' ': exit(0); break;
-        case 'j': escalar(cubo, 1.1, 1.1, 1.1); break;
-        case 'k': escalar(cubo, 0.9, 0.9, 0.9); break;
-        case 'a': rotacionar(cubo, 5, 0, 0); break;
-        case 's': rotacionar(cubo, 0, 5, 0); break;
-        case 'd': rotacionar(cubo, 0, 0, 5); break;
     }
 }
 
-void keyboard_special(int key, int x, int y) {
-    switch (key) {
-        case GLUT_KEY_UP: movimentar(cubo, 0, 5, 0); break;
-        case GLUT_KEY_DOWN: movimentar(cubo, 0, -5, 0); break;
-        case GLUT_KEY_LEFT: movimentar(cubo, -5, 0, 0); break;
-        case GLUT_KEY_RIGHT: movimentar(cubo, 5, 0, 0); break;
-    }
+void mouse_click(int button, int state, int x, int y) {
+  mouse.botao = button;
+  mouse.posicao = { x, y };
 }
 
 void mouse_move(int x, int y) {
-    if (posMouse.first < 0 || posMouse.second < 0)
-        posMouse = { x, y };
+    if (mouse.posicao.first < 0 || mouse.posicao.second < 0)
+      mouse.posicao = { x, y };
 
-    const double offsetX = (x - posMouse.first) / 180 * -1;
-    const double offsetY = (y - posMouse.second) / 180 * -1;
+    if (mouse.botao == GLUT_LEFT_BUTTON) {
+      const double offsetX = (x - mouse.posicao.first) * mouse.sense;
+      const double offsetY = (mouse.posicao.second - y) * mouse.sense;
 
-    //rotacionar(cubo, offsetY, offsetX, 0);
-    std::cout << "\n\nrotacao\n";
-    std::cout << x << "\t" << y << std::endl;
-    std::cout << offsetX << "\t" << offsetY << std::endl;
+      movimentar(cubo, offsetX, offsetY, 0);
+    }
+    else if (mouse.botao == GLUT_RIGHT_BUTTON) {
+      const double offsetX = x - mouse.posicao.first;
+      const double offsetY = y - mouse.posicao.second;
+      const double grauX = offsetX / 180 * -1;
+      const double grauY = offsetY / 180 * -1;
+
+      rotacionar(cubo, grauY, grauX, 0);
+    }
+
+    mouse.posicao = { x, y };
 }
